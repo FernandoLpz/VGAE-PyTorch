@@ -1,4 +1,5 @@
 import networkx as nx
+import numpy as np
 from random import randint
 
 class PrepareGraph:
@@ -9,7 +10,24 @@ class PrepareGraph:
       
    @staticmethod
    def train_test_split(adjacency, test_size):
+      false_edges = list()
+      
       test_items = round(adjacency.shape[0] * test_size)
+      
+      idx_graph = np.argwhere(adjacency.toarray() == 1)
+      idx_graph = [tuple(edge) for edge in idx_graph]
+      
+      while len(false_edges) < test_items:
+         row = randint(0, adjacency.shape[0])
+         col = randint(0, adjacency.shape[0])
+         
+         false_edge = tuple([row, col])
+         
+         if false_edge not in idx_graph:
+            if false_edge not in false_edges:
+               false_edges.append(false_edge)
+      
+      
       
       return 1,2
       
