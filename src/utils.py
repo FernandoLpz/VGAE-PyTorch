@@ -8,6 +8,16 @@ class PrepareGraph:
    def __init__(self, **kwargs):
       self.adjacency, self.edges = PrepareGraph.load_adjacency_matrix(kwargs['file'])
       self.train_adj, self.test_edges, self.false_edges = PrepareGraph.train_test_split(self.adjacency, kwargs['test_size'], self.edges)
+      self.normalized = PrepareGraph.normalize_adjacency_matrix(self.train_adj)
+      
+   @staticmethod
+   def normalize_adjacency_matrix(train_adjacency):
+      G = nx.from_numpy_matrix(train_adjacency)
+      normalized = nx.normalized_laplacian_matrix(G)
+      normalized = normalized.toarray()
+      
+      return normalized
+      
       
    @staticmethod
    def train_test_split(adjacency, test_size, edges):
