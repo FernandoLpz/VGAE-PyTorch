@@ -9,6 +9,7 @@ class PrepareGraph:
       self.adjacency, self.edges = PrepareGraph.load_adjacency_matrix(kwargs['file'])
       self.train_adj, self.test_edges, self.false_edges = PrepareGraph.train_test_split(self.adjacency, kwargs['test_size'], self.edges)
       self.normalized = PrepareGraph.normalize_adjacency_matrix(self.train_adj)
+      self.x_features = np.identity(self.adjacency.shape[0])
       
    @staticmethod
    def normalize_adjacency_matrix(train_adjacency):
