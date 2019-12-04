@@ -24,9 +24,9 @@ class VGAE(nn.Module):
       self.w_1_sigma = torch.nn.Parameter(torch.randn(self.num_neurons, self.embedding_size, requires_grad=True))
       self.b_1_sigma = torch.nn.Parameter(torch.randn(self.embedding_size, requires_grad=True))
       
-      # torch.nn.init.normal_(self.w_0)
-      # torch.nn.init.normal_(self.w_1_mu)
-      # torch.nn.init.normal_(self.w_1_sigma)
+      torch.nn.init.normal_(self.w_0)
+      torch.nn.init.normal_(self.w_1_mu)
+      torch.nn.init.normal_(self.w_1_sigma)
       
       
    def encode(self, adjacency, norm_adj, x_features):

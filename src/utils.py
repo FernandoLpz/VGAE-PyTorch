@@ -51,8 +51,8 @@ class PrepareGraph:
             
       for idx in idx_test:
          test_edges.append(edges[idx])
-         adjacency[edges[idx][0], edges[idx][1]] = 0
-         adjacency[edges[idx][1], edges[idx][0]] = 0
+         train_adj[edges[idx][0], edges[idx][1]] = 0
+         train_adj[edges[idx][1], edges[idx][0]] = 0
       
       return train_adj, test_edges, false_edges
       
