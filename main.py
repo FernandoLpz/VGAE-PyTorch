@@ -1,4 +1,5 @@
 import torch
+import torch.nn.functional as F
 
 from src import PrepareGraph
 from src import VGAE
@@ -17,15 +18,21 @@ if __name__ == '__main__':
    # Instatiate VGAE model
    vgae = VGAE(num_neurons=32,
             num_features=pg.train_adj.shape[0],
-            embdding_size=32)
+            embedding_size=32)
    
    optimizer = torch.optim.Adam(vgae.parameters(), lr=0.01)
    
    vgae.train()
-   for epoch in range(10):
-      x_reconstructed, sigma, mu = vgae(train_adj, normalized, x_features)
+   for epoch in range(100):
+      x_reconstructed = vgae(train_adj, normalized, x_features)
       optimizer.zero_grad()
-      latent_loss = -(0.5/pg.train_adj.shape[0]) * tf.reduce_mean(tf.reduce_sum(1 + 2 * tf.log(sigma) - tf.square(mu) - tf.square(sigma), 1))           
       
-   
+      loss = F.binary_cross_entropy(x_reconstructed, train_adj)
+      kl_divergence = F.kl_div(vgae.mu, vgae.sigma)
+      loss -= kl_divergence
+      
+      loss.backward()
+      optimizer.step()
+      
+      print('Epoch: ', epoch, 'loss: ', loss.item())
    
