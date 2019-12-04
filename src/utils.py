@@ -81,5 +81,7 @@ class PrepareGraph:
       for edge in edges:
          adjacency[edge[0], edge[1]] = 1
          adjacency[edge[1], edge[0]] = 1
+      
+      adjacency = adjacency + np.identity(num_entities + 1)
 
       return adjacency, edges
