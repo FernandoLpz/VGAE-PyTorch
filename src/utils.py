@@ -22,23 +22,29 @@ class PrepareGraph:
       
       self.train_edges = list()
       self.test_edges = list()
-      self.false_edges = list()
+      self.test_false_edges = list()
+      self.train_false_edges = list()
       
       self.train_adj = self.adjacency.copy()
       
       num_test_edges = round(len(self.edges) * test_size)
       
       # Create false edges
-      while len(self.false_edges) < num_test_edges:
+      while (len(self.train_false_edges) + len(self.test_false_edges)) < len(self.edges):
          row = randint(0, self.train_adj.shape[0])
          col = randint(0, self.train_adj.shape[0])
          
          if row != col:
             if tuple([row, col]) not in self.edges:
                if tuple([col, row]) not in self.edges:
-                  if tuple([row, col]) not in self.false_edges:
-                     if tuple([col, row]) not in self.false_edges:
-                        self.false_edges.append(tuple([row, col]))
+                  if tuple([row, col]) not in self.train_false_edges:
+                     if tuple([col, row]) not in self.train_false_edges:
+                        if tuple([row, col]) not in self.test_false_edges:
+                           if tuple([col, row]) not in self.test_false_edges:
+                              if len(self.test_false_edges) < num_test_edges:
+                                 self.test_false_edges.append(tuple([row, col]))
+                              else:
+                                 self.train_false_edges.append(tuple([row, col]))
       
       # Create test edges
       idx_test = list()

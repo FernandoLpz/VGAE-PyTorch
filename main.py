@@ -37,29 +37,29 @@ if __name__ == '__main__':
 	# Load raw files and transform them into adjacency matrix
    pg = PrepareGraph(file=graph_file, test_size=0.1)
 	
-   train_adj = torch.Tensor(pg.train_adj)
-   normalized = torch.Tensor(pg.normalized)
-   x_features = torch.Tensor(pg.x_features)
+   # train_adj = torch.Tensor(pg.train_adj)
+   # normalized = torch.Tensor(pg.normalized)
+   # x_features = torch.Tensor(pg.x_features)
 
-   # Instatiate VGAE model
-   vgae = VGAE(num_neurons=16, num_features=pg.adjacency.shape[0], embedding_size=12)
-   optimizer = torch.optim.Adam(vgae.parameters(), lr=0.01)
+   # # Instatiate VGAE model
+   # vgae = VGAE(num_neurons=16, num_features=pg.adjacency.shape[0], embedding_size=12)
+   # optimizer = torch.optim.Adam(vgae.parameters(), lr=0.01)
 	
-   for epoch in range(150):
+   # for epoch in range(150):
 	
-      vgae.train()
+   #    vgae.train()
 
-      x_hat = vgae(train_adj, normalized, x_features)
-      optimizer.zero_grad()
+   #    x_hat = vgae(train_adj, normalized, x_features)
+   #    optimizer.zero_grad()
 
-      loss = F.binary_cross_entropy(x_hat, train_adj)
-      kl_divergence = 0.5/ x_hat.size(0) * (1 + 2*vgae.GCN_sigma - vgae.GCN_mu**2 - torch.exp(vgae.GCN_sigma)).sum(1).mean()
-      loss -= kl_divergence
+   #    loss = F.binary_cross_entropy(x_hat, train_adj)
+   #    kl_divergence = 0.5/ x_hat.size(0) * (1 + 2*vgae.GCN_sigma - vgae.GCN_mu**2 - torch.exp(vgae.GCN_sigma)).sum(1).mean()
+   #    loss -= kl_divergence
 
-      loss.backward()
-      optimizer.step()
+   #    loss.backward()
+   #    optimizer.step()
       
-      prec = precision(x_hat, train_adj)
-      acc = accuracy(x_hat, pg.test_edges, pg.false_edges, pg.node_to_id)
+   #    prec = precision(x_hat, train_adj)
+   #    acc = accuracy(x_hat, pg.test_edges, pg.false_edges, pg.node_to_id)
 
-      print('Epoch: ', epoch + 1, 'loss: ', loss.item(), 'precision: ', prec, 'acc: ', acc)
+   #    print('Epoch: ', epoch + 1, 'loss: ', loss.item(), 'precision: ', prec, 'acc: ', acc)
