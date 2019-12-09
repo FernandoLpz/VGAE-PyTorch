@@ -31,8 +31,8 @@ class PrepareGraph:
       
       # Create false edges
       while (len(self.train_false_edges) + len(self.test_false_edges)) < len(self.edges):
-         row = randint(0, self.train_adj.shape[0])
-         col = randint(0, self.train_adj.shape[0])
+         row = randint(min(self.G.nodes()), max(self.G.nodes()))
+         col = randint(min(self.G.nodes()), max(self.G.nodes()))
          
          if row != col:
             if tuple([row, col]) not in self.edges:
@@ -45,7 +45,7 @@ class PrepareGraph:
                                  self.test_false_edges.append(tuple([row, col]))
                               else:
                                  self.train_false_edges.append(tuple([row, col]))
-      
+                                 
       # Create test edges
       idx_test = list()
       while len(idx_test) < num_test_edges:
@@ -55,14 +55,14 @@ class PrepareGraph:
 
       for idx in idx_test:
          self.test_edges.append(self.edges[idx])
-         self.train_adj[self.edges[idx][0], self.edges[idx][1]] = 0
-         self.train_adj[self.edges[idx][1], self.edges[idx][0]] = 0
+         self.train_adj[self.node_to_id[self.edges[idx][0]], self.node_to_id[self.edges[idx][1]]] = 0
+         self.train_adj[self.node_to_id[self.edges[idx][1]], self.node_to_id[self.edges[idx][0]]] = 0
       
       # Train edges
       for i in range(self.train_adj.shape[0]):
          for j in range(self.train_adj.shape[1]):
             if self.train_adj[i][j] == 1:
-               self.train_edges.append(tuple([i,j]))
+               self.train_edges.append(tuple([self.id_to_node[i],self.id_to_node[j]]))
                
       pass
       
@@ -72,25 +72,25 @@ class PrepareGraph:
       self.node_to_id = {}
       
       # Load csv file
-      self.edges = pd.read_csv(file, header=None)
+      self.edges = pd.read_csv(file, delimiter=' ',header=None)
       self.edges = self.edges.values
       self.edges = [tuple(edge) for edge in self.edges]
       
-      G = nx.Graph()
-      G.add_edges_from(self.edges)
+      self.G = nx.Graph()
+      self.G.add_edges_from(self.edges)
       
       i=0
-      for node in G.nodes():
+      for node in self.G.nodes():
          self.id_to_node[i] = node
          self.node_to_id[node] = i
          i+=1
-      
+         
       # Build adjacency matrix
-      self.adjacency = np.zeros((len(G.nodes()), len(G.nodes())), dtype=int)
+      self.adjacency = np.zeros((len(self.G.nodes()), len(self.G.nodes())), dtype=int)
       for edge in self.edges:
-         self.adjacency[edge[0], edge[1]] = 1
-         self.adjacency[edge[1], edge[0]] = 1
+         self.adjacency[self.node_to_id[edge[0]], self.node_to_id[edge[1]]] = 1
+         self.adjacency[self.node_to_id[edge[1]], self.node_to_id[edge[0]]] = 1
       
-      self.adjacency = self.adjacency + np.identity(len(G.nodes()))
+      self.adjacency = self.adjacency + np.identity(len(self.G.nodes()))
 
       pass
