@@ -1,12 +1,15 @@
+import os
 import numpy as np
 import pandas as pd
 import networkx as nx
 
 from random import randint
 
+# Prepare data. Reads raw files (csv) and save it as list of edges
+# Splits training and test sets as well as creates false edges
 class PrepareGraph:
    def __init__(self, **kwargs):
-      self.load_adjacency_matrix(kwargs['file'])
+      self.load_adjacency_matrix(kwargs['directory'], kwargs['dataset'])
       self.train_test_split(kwargs['test_size'])
       self.normalize_adjacency_matrix()
       self.x_features = np.identity(self.adjacency.shape[0])
@@ -66,13 +69,13 @@ class PrepareGraph:
                
       pass
       
-   def load_adjacency_matrix(self, file):
+   def load_adjacency_matrix(self, directory, dataset):
       
       self.id_to_node = {}
       self.node_to_id = {}
       
       # Load csv file
-      self.edges = pd.read_csv(file, delimiter=' ',header=None)
+      self.edges = pd.read_csv(os.path.join(directory, dataset, dataset+'.csv'), delimiter=' ',header=None)
       self.edges = self.edges.values
       self.edges = [tuple(edge) for edge in self.edges]
       
