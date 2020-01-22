@@ -1,4 +1,4 @@
-# Link Prediction: An approach based on Variational Graph Auto-Encoders
+# Variational Graph Auto-Encoders
 The [VGAE-based model](https://arxiv.org/pdf/1611.07308.pdf) is an unsupervised-based model which takes as enconder the [Graph Convolutional Network (GCN)](https://tkipf.github.io/graph-convolutional-networks/) model. VGAE extracts
 latent variables from a given connected graph, then the decoding process is realized through a simple inner product.
 
